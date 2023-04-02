@@ -60,7 +60,6 @@ int Dequeue(int queue[]){
         }
         return tmp;
     }
-    
 }
 
 int QLength(){
