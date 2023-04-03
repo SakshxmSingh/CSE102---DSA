@@ -32,7 +32,7 @@ int RecursiveBinarySearch(int arr[], int low, int upp, int key){
         if(arr[mid]==key){
             return mid;
         }
-        if(arr[mid]<key){
+        if(arr[mid]>key){
             return RecursiveBinarySearch(arr, low, mid-1, key);
         }
         else{
@@ -42,14 +42,14 @@ int RecursiveBinarySearch(int arr[], int low, int upp, int key){
 }
 
 int main(){
-    int arr[] = {10, 12, 34, 54, 23, 45, 667, 822, 91, 32, 59, 69, 6969, 100, 345, 540};
+    int arr[] = {10, 12, 34, 54, 23, 45, 667, 822, 91, 32, 59, 69, 6969, 100, 345, 540, 23, 23, 23};
     InsertionSort(arr, sizeof(arr)/sizeof(arr[0]));
-    // for(int k=0; k<sizeof(arr)/sizeof(arr[0]); k++){
-    //     printf("%d  ",arr[k]);
-    // }
+    for(int k=0; k<sizeof(arr)/sizeof(arr[0]); k++){
+        printf("%d  ",arr[k]);
+    }
 
-    // printf("\n%d\n", RecursiveBinarySearch(arr, 0, sizeof(arr)/sizeof(arr[0])-1, 23));
+    printf("\n%d\n", RecursiveBinarySearch(arr, 0, sizeof(arr)/sizeof(arr[0])-1, 23));
 
-    int low=0, upp=sizeof(arr)/sizeof(arr[0])-1, key=23;
+    // int low=0, upp=sizeof(arr)/sizeof(arr[0])-1, key=23;
     return 0;
 }

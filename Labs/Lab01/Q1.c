@@ -41,9 +41,45 @@ void MergeSort(int arr[], int len){
     Merge(arr, left, mid, right, len-mid);
 }
 
+int RecursiveBinarySearch(int arr[], int low, int upp, int key){
+    if(upp==low){
+        if(arr[low]==key){
+            return low;
+        }
+        else{
+            return 0;
+        }
+    }
+    else{
+        int mid;
+        if((upp+low)%2==0){
+            mid=(upp+low)/2;
+        }
+        else{
+            mid=(upp+low+1)/2;
+        }
+        if(arr[mid]==key){
+            return mid;
+        }
+        if(arr[mid]>key){
+            return RecursiveBinarySearch(arr, low, mid-1, key);
+        }
+        else{
+            return RecursiveBinarySearch(arr, mid+1, upp, key);
+        }
+    }
+}
+
+int isSorted(int sorted[], int unsorted[], int len){
+    for(int i=0; i<len; i++){
+        if (sorted[i]!=unsorted[i]){
+            return 0;
+        }
+    }
+    return 1;
+}
+
 int main(){
-    // int arr[5] = {5,1,10,7,2};
-    // int n = sizeof(arr) / sizeof(arr[0]);
     int n;
     scanf("%d\n",&n);
     int arr[n];
@@ -51,29 +87,24 @@ int main(){
         scanf("%d",&arr[i]);
     }
 
-    int arrTmp[n];
+    int unsorted[n];
     for(int i=0; i<n; i++){
-        arrTmp[i]=arr[i];
+        unsorted[i]=arr[i];
     }
 
     MergeSort(arr, n);
 
-    for(int i=0;i<n;i++){
-        printf("%d ",arr[i]);
-    }
-
     int i, j, sorts = 0;
-    for (i = 0; i < n; i++) {
-        if (arrTmp[i] != arr[i]) {
-            for (j = i + 1; j < n; j++) {
-                if (arrTmp[j] == arr[i]) {
-                    break;
-                }
+    while(isSorted(arr, unsorted, n)==0){
+        for (i = 0; i < n; i++) {
+            if (unsorted[i] != arr[i]) {
+                j = RecursiveBinarySearch(arr, 0, n-1, unsorted[i]);
+
+                int temp = unsorted[j];
+                unsorted[j] = unsorted[i];
+                unsorted[i] = temp;
+                sorts++;
             }
-            int temp = arrTmp[i];
-            arrTmp[i] = arrTmp[j];
-            arrTmp[j] = temp;
-            sorts++;
         }
     }
     printf("%d\n",sorts);
