@@ -34,16 +34,6 @@ void quickSort(colsum arr[], int low, int high) {
     }
 }
 
-void printmatt(int m, int n, int matt[m][n]){
-    for (int i = 0; i < m; i++){
-        for (int j = 0; j < n; j++){
-            printf("%d ", matt[i][j]);
-        }
-        printf("\n");
-    }
-}
-
-
 int main(){
     int m, n;
     scanf("%d ",&m);
