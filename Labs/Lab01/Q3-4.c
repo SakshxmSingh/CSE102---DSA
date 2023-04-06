@@ -99,6 +99,6 @@ int main(){
     for (int i = 0; i < q; i++){
         printf("%d\n", CountSubArrs(A, attrs[i][0]-1, attrs[i][1], attrs[i][2]));
     }
-    
+    //lol
     return 0;
 }

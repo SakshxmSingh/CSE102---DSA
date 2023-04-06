@@ -5,7 +5,6 @@ typedef struct colsum{
     int index;
 } colsum;
 
-
 void swap(colsum* a, colsum* b) {
     colsum t = *a;
     *a = *b;
@@ -44,7 +43,6 @@ int main(){
 
     for (int i = 0; i < n; i++){
         colsum_arr[i].data=0;
-        // colsum_unsort[i]=0;
         colsum_arr[i].index=i;
     }
 
@@ -68,8 +66,6 @@ int main(){
         }
     }
 
-    // printmatt(m,n,matt);
-
     // printf("\n\n");
     // for(int i = 0; i<n; i++){
     //     printf("%d ",colsum_arr[i].data);
@@ -86,7 +82,6 @@ int main(){
         }
         printf("\n");
     }
-
     return 0;
 }
 
