@@ -101,6 +101,17 @@ void deleteData(int val, Node *pFront){
     free(pCur);
 }
 
+void reverseList(Node *pFront){
+    Node *prev = NULL, *cur = NULL, *next = NULL;
+    cur = pFront;
+    while (cur != NULL) {
+        next = cur->pNext;
+        cur->pNext = prev;
+        prev = cur;
+        cur = next; }
+    pFront = prev;
+}
+
 int main(){
 
     //creating nodes
