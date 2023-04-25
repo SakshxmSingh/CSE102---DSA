@@ -15,7 +15,7 @@ typedef struct quwuw{
 
 void Push(quwuw *stack, int ele){
     stack=(quwuw*)realloc(stack, sizeof(stack)+sizeof(quwuw));
-    stack[0]->arr
+    // stack[0]->arr
     return;
 }
 int Pop(int **stack){
