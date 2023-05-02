@@ -3,147 +3,206 @@
 #include <string.h>
 
 typedef struct Node{
-    int nData;
-    struct Node *pNext;
-} Node;
+    int dirnum;
+    char name[5];
+    struct Node* nextdirs[20];
+    struct Node* prev;
+}Node;
 
-void insertAtEnd(int val, Node **pFront){
-    Node *pInsertEnd = NULL, *pPoint=NULL;
-    pInsertEnd = (Node *)malloc(sizeof(Node));
-    pInsertEnd->nData=val;
-    pInsertEnd->pNext=NULL;
-
-    if (*pFront==NULL){
-        *pFront = pInsertEnd;
+int LinearSearchNode(Node* A[], char dirname[5], int size){
+    // int flag = 0;
+    for(int i=0; i<size; i++){
+        if(A[i]==NULL){
+            continue;
+        }
+        if(strcmp(dirname,A[i]->name)==0){
+            return i;
+            break;
+        }
     }
-    else{
-        pPoint = *pFront;
-        while (pPoint->pNext != NULL){
-            pPoint = pPoint->pNext;}
-        pPoint->pNext=pInsertEnd;
-    }
+    return -1;
 }
 
-void reverseList(Node **pFront){
-    Node *prev = NULL, *cur = NULL, *next = NULL;
-    cur = *pFront;
-    while (cur != NULL) {
-        next = cur->pNext;
-        cur->pNext = prev;
-        prev = cur;
-        cur = next; }
-    *pFront = prev;
+void pwd(Node* curr){
+    char str[500] = "";
+    char result[500];
+    // char temp[5];
+    // strcpy(temp,curr->name);
+    while(curr!=NULL){
+        if (strlen(str) == 0) {
+            sprintf(result, "%s", curr->name);
+        }
+        else{
+            sprintf(result, "%s/%s", curr->name,str);
+        }
+        strcpy(str,result);
+        curr = curr->prev;
+    }
+    // strcat(str,temp);
+    printf("%s\n",str);
 }
 
-void printLL(Node *pFront){
-    if(pFront==NULL){
-        printf("EMPTY\n");
-        return;
-    }
-    Node *pPoint = NULL;
-    pPoint = pFront;
-    while (pPoint!=NULL){
-        printf("%d ",pPoint->nData);
-        pPoint = pPoint->pNext;
+void ls(Node* curr){
+    for(int i=0; i<curr->dirnum; i++){
+        Node* temp = curr->nextdirs[i];
+        printf("%s ",temp->name);
     }
     printf("\n");
-
 }
 
-int lengthLL(Node *pFront){
-    int n = 0;
-    while (pFront!=NULL){
-        pFront = pFront->pNext;
-        n+=1;
+// void cd(Node** curr, char dirname[5]){
+//     if(strcmp(dirname,"..")==0){
+//         if(curr->prev!=NULL){
+//             curr = curr->prev;
+//         }
+//         else {
+//             printf("-1\n");
+//         }
+//     }
+//     else{
+//         int index = LinearSearchNode(curr->nextdirs,dirname,curr->dirnum);
+//         if(index==-1){
+//             printf("-1\n");
+//         }
+//         else{
+//             curr = curr->nextdirs[index];
+//         }
+//     }
+// }
+
+void cd(Node** curr, char dirname[5]){
+    if(strcmp(dirname,"..")==0){
+        if((*curr)->prev!=NULL){
+            *curr = (*curr)->prev;
+        }
+        else {
+            printf("-1\n");
+        }
     }
-    return n;
+    else{
+        int index = LinearSearchNode((*curr)->nextdirs,dirname,(*curr)->dirnum);
+        if(index==-1){
+            printf("-1\n");
+        }
+        else{
+            *curr = (*curr)->nextdirs[index];
+        }
+    }
 }
 
-int KthNode(Node *pFront, int k){
-    int len = lengthLL(pFront);
-    if (k < 1 || k > len) {
-        return -1;
-    }
-    for(int i=0; i<k-1; i++){
-        pFront = pFront->pNext;
-    }
-    return pFront->nData;
-}
-
-void deleteKthNode(Node **pFront, int k) {
-    int len = lengthLL(*pFront);
-    if (k < 1 || k > len) {
+void mkdir(Node* curr, char dirname[5]){
+    int index = LinearSearchNode(curr->nextdirs,dirname,curr->dirnum);
+    if(index != -1){
         printf("-1\n");
         return;
     }
-    Node *prev = NULL;
-    Node *cur = *pFront;
-    int i = 1;
-    while (cur != NULL && i < k) {
-        prev = cur;
-        cur = cur->pNext;
-        i++;
+    if(curr->dirnum<20){
+
+        Node* new_dir = malloc(sizeof(Node));
+        new_dir->dirnum=0;
+        new_dir->prev=curr;
+        memset(new_dir->nextdirs, 0, sizeof(new_dir->nextdirs));
+        strcpy(new_dir->name,dirname);
+
+        curr->nextdirs[curr->dirnum]=new_dir;
+        curr->dirnum+=1;
+        return;
     }
-    int val = cur->nData;
-    if (prev == NULL) {
-        *pFront = cur->pNext;
-    } else {
-        prev->pNext = cur->pNext;
+
+    else{
+        printf("-1\n");
+        return;
     }
-    free(cur);
 }
 
+void rm(Node** curr, char dirname[5]){
+    if ((*curr)->dirnum>0){
+        int index = LinearSearchNode((*curr)->nextdirs,dirname,(*curr)->dirnum);
+        // printf("%d\n",index);
+        if(index==-1){
+            printf("-1\n");
+            return;
+        }
+        else{
+            Node* dir_to_delete = (*curr)->nextdirs[index];
+
+            for (int i = index; i < (*curr)->dirnum - 1; i++) {
+                (*curr)->nextdirs[i] = (*curr)->nextdirs[i+1];
+            }
+
+            (*curr)->nextdirs[(*curr)->dirnum - 1] = NULL;
+            (*curr)->dirnum--;
+        }
+    }
+    else{
+        printf("-1\n");
+        return;
+    }
+}
+
+// void rm(Node* curr, char dirname[5]){
+//     int index = LinearSearchNode(curr->nextdirs,dirname,curr->dirnum);
+//     if (index==-1){
+//         printf("-1\n");
+//         return;
+//     }
+
+//     Node* dir_to_delete = curr->nextdirs[index];
+
+//     // recursively delete all subsequent directories within
+//     // for (int i=0; i<dir_to_delete->dirnum; i++){
+//     //     rm(dir_to_delete, dir_to_delete->nextdirs[i]->name);
+//     // }
+
+//     // delete current directory
+//     free(dir_to_delete);
+//     curr->nextdirs[index] = NULL;
+//     curr->dirnum--;
+// }
 
 int main(){
     int n, q;
-    scanf("%d %d",&n, &q);
+    scanf("%d", &n);
 
-    Node *pStart=NULL;
-    int arr[n];
-    for(int i=0;i<n;i++){
-        scanf("%d", &arr[i]);
-    }
-    for(int i=0;i<n;i++){
-        insertAtEnd(arr[i], &pStart);
-    }
+    Node* root = (Node*)malloc(sizeof(Node));
+    strcpy(root->name,"root");
+    root->prev=NULL;
+    root->dirnum=0;
+    // root->nextdirs = malloc(20*sizeof(Node));
+    Node* current = root;
 
-    // for(int i=0;i<q;i++){
-    //     char str[10];
-    //     if()
+    while(n--){
+        char dir[20], op[20];
+        scanf("%d", &q);
 
-    // }
-
-    while(q--) {
-        char query[15];
-        scanf("%s", query);
-
-        if(strcmp(query, "Reverse") == 0) {
-            reverseList(&pStart);
+        if(q==1){
+            scanf("%s",op);
+            
+            //pwd
+            if(strcmp(op,"pwd")==0) pwd(current);
+            //ls
+            else if (strcmp(op,"ls")==0) ls(current);
         }
-        else if(strcmp(query, "Print") == 0) {
-            if(pStart == NULL) {
-                printf("EMPTY\n");
-            } else {
-                printLL(pStart);
-            }
+
+        else if(q==2){
+            scanf("%s %s",op,dir);
+
+            //cd
+            if(strcmp(op,"cd")==0) cd(&current,dir);
+            //mkdir
+            else if(strcmp(op,"mkdir")==0) mkdir(current, dir);
         }
-        else if(strcmp(query, "Length") == 0) {
-            printf("%d\n", lengthLL(pStart));
+
+        else if(q==3){
+            char temp[2];
+            scanf("%s %s %s",op,temp,dir);
+
+            //rm
+            if(strcmp(op,"rm")==0) rm(&current,dir);
         }
-        else if(strcmp(query, "KthNode") == 0) {
-            int k;
-            scanf("%d", &k);
-            int kthNode = KthNode(pStart, k);
-            if(kthNode == -1) {
-                printf("-1\n");
-            } else {
-                printf("%d\n", kthNode);
-            }
-        }
-        else if(strcmp(query, "Delete") == 0) {
-            int k;
-            scanf("%d", &k);
-            deleteKthNode(&pStart, k);
+
+        if (n == 0) {
+        break;
         }
     }
     return 0;

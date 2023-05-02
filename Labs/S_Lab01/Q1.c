@@ -93,49 +93,6 @@ void deleteKthNode(Node **pFront, int k) {
     free(cur);
 }
 
-void AddtoKthNode(Node *pFront, int k, int x){
-    int len = lengthLL(pFront);
-    if (k < 1 || k > len) {
-        printf("-1\n");
-        return;
-    }
-    for(int i=0; i<k-1; i++){
-        pFront = pFront->pNext;
-    }
-    pFront->nData += x;
-    return;
-}
-
-void SubtoKthNode(Node *pFront, int k, int x){
-    int len = lengthLL(pFront);
-    if (k < 1 || k > len) {
-        printf("-1\n");
-        return;
-    }
-    for(int i=0; i<k-1; i++){
-        pFront = pFront->pNext;
-    }
-    pFront->nData -= x;
-    return;
-}
-
-void XORoflastKnodes(Node *pFront, int k, int size){
-    if (k < 1 || k > size) {
-        printf("-1\n");
-        return;
-    }
-    int XOR = 0;
-    for(int i=0; i<size-k; i++){
-        pFront = pFront->pNext;
-    }
-    for(int i=0; i<k; i++){
-        XOR ^= pFront->nData;
-        pFront = pFront->pNext;
-    }
-    printf("%d\n", XOR);
-    return;
-}
-
 
 int main(){
     int n, q;
@@ -187,21 +144,6 @@ int main(){
             int k;
             scanf("%d", &k);
             deleteKthNode(&pStart, k);
-        }
-        else if(strcmp(query, "Add") == 0){
-            int k, val;
-            scanf("%d %d", &k, &val);
-            AddtoKthNode(pStart, k, val);
-        }
-        else if(strcmp(query, "Subtract") == 0){
-            int k, val;
-            scanf("%d %d", &k, &val);
-            SubtoKthNode(pStart, k, val);
-        }
-        else if(strcmp(query, "Xor") == 0){
-            int k;
-            scanf("%d", &k);
-            XORoflastKnodes(pStart, k, lengthLL(pStart));
         }
     }
     return 0;
