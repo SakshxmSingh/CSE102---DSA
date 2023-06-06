@@ -136,7 +136,6 @@ void XORoflastKnodes(Node *pFront, int k, int size){
     return;
 }
 
-
 int main(){
     int n, q;
     scanf("%d %d",&n, &q);
@@ -149,12 +148,6 @@ int main(){
     for(int i=0;i<n;i++){
         insertAtEnd(arr[i], &pStart);
     }
-
-    // for(int i=0;i<q;i++){
-    //     char str[10];
-    //     if()
-
-    // }
 
     while(q--) {
         char query[15];

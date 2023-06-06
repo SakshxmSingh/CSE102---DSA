@@ -28,7 +28,7 @@ void PreOrderTraversal(BTNode *pRoot){
 void InOrderTraversal(BTNode *pRoot){
     if (pRoot!=NULL) {
         InOrderTraversal (pRoot->pLeft);
-        printf ("%d", pRoot->nData);
+        printf ("%d ", pRoot->nData);
         InOrderTraversal (pRoot->pRight);
     }
 }
@@ -54,6 +54,13 @@ int height (BTNode *pRoot) {
         return 0;}
     else{
         return 1 + max(height(pRoot->pLeft), height (pRoot->pRight));}
+}
+
+int diameter (BTNode *pRoot) {
+    if (pRoot==NULL){
+        return 0;}
+    else{
+        return max(height(pRoot->pLeft)+height(pRoot->pRight)+1, max(diameter(pRoot->pLeft), diameter(pRoot->pRight)));}
 }
 
 BTNode* Copy(BTNode *pRoot) {
@@ -138,7 +145,7 @@ BTNode* InsertBSTRecur(BTNode* pRoot, int value) {
         pRoot = malloc(sizeof(BTNode));
         pRoot->pLeft = NULL, pRoot->pRight = NULL;
         pRoot->nData = value;
-        return NULL;
+        // return NULL;
     }
     if (pRoot->nData > value) {
         pRoot = InsertBSTRecur(pRoot->pLeft, value);
@@ -162,6 +169,50 @@ void InsertBSTIter(BTNode* pRoot, int value) {
         pRoot->nData = value;
         pRoot->pParent=par;
     }
+}
+
+BTNode* Delete(BTNode* pRoot, int value) {
+
+    BTNode* to_be_deleted = Search(pRoot, value);
+    if(to_be_deleted==NULL){
+        printf("Key doesnt exist");
+        return NULL;
+    }
+
+    BTNode* y = malloc(sizeof(BTNode));
+
+    if(to_be_deleted->pLeft==NULL || to_be_deleted->pRight==NULL){
+        y = to_be_deleted;
+    }
+    else pRoot = SuccBST(y);
+
+    BTNode* x = malloc(sizeof(BTNode));
+
+    if (y->pLeft != NULL){
+        x = y->pLeft;
+    }
+    else x = y->pRight;
+
+    if(x!=NULL){
+        x->pParent = y->pParent;
+    }
+
+    BTNode* yPar = malloc(sizeof(BTNode));
+    yPar = y->pParent;
+
+    if(y->pParent==NULL){
+        pRoot = x;
+    }
+    else if(y==yPar->pLeft){
+        yPar->pLeft = x;
+    }
+    else yPar->pRight = x;
+
+    if(y!=to_be_deleted){
+        to_be_deleted->nData = y->nData;
+    }
+
+    return pRoot;
 }
 
 int main(){
